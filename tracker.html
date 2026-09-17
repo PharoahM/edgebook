@@ -116,7 +116,7 @@ function load(){ try{ const j=JSON.parse(localStorage.getItem("edgebook")||"{}")
 function save(){ try{ const {key,alerts,state,local,queue,last,tab}=S; localStorage.setItem("edgebook", JSON.stringify({key,alerts,state,local,queue,last,tab})); }catch(e){} }
 const $ = s=>document.querySelector(s);
 const esc = s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const fmtET = (epoch, opts)=> new Date(epoch*1000).toLocaleString("en-CA", Object.assign({timeZone:"America/Toronto", weekday:"short", hour:"numeric", minute:"2-digit"}, opts||{}));
+const fmtET = (epoch, opts)=> new Date(epoch*1000).toLocaleString("en-CA", Object.assign({timeZone:"America/Toronto", weekday:"short", month:"short", day:"numeric", hour:"numeric", minute:"2-digit"}, opts||{}));
 const am = p=> (p>0?"+":"")+p;
 const money = v=> (v<0?"-":"")+"$"+Math.abs(v).toLocaleString("en-CA",{minimumFractionDigits:0,maximumFractionDigits:2});
 const ago = t=>{ const s=Math.max(0, Math.floor(Date.now()/1000-t)); return s<60?s+"s":s<3600?Math.floor(s/60)+"m":s<86400?Math.floor(s/3600)+"h":Math.floor(s/86400)+"d"; };
