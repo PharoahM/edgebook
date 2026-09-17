@@ -110,7 +110,7 @@ td:first-child,th:first-child{text-align:left}
 "use strict";
 // ---------- storage ----------
 const NTFY = "https://ntfy.sh";
-const BOOKS = {draftkings:"DraftKings", fanduel:"FanDuel", betrivers:"BetRivers", betmgm:"BetMGM", sportsinteraction:"Sports Interaction"};
+const BOOKS = {draftkings:"DraftKings", fanduel:"FanDuel", betrivers:"BetRivers", betmgm:"BetMGM", sportsinteraction:"Sports Interaction", tooniebet:"ToonieBet", betway:"Betway"};
 const S = {key:"", alerts:{}, state:null, local:{}, queue:[], last:"", tab:"live", open:{}};
 function load(){ try{ const j=JSON.parse(localStorage.getItem("edgebook")||"{}"); Object.assign(S, j); }catch(e){} }
 function save(){ try{ const {key,alerts,state,local,queue,last,tab}=S; localStorage.setItem("edgebook", JSON.stringify({key,alerts,state,local,queue,last,tab})); }catch(e){} }
