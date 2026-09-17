@@ -350,6 +350,9 @@ function openPair(){
 
 // ---------- boot ----------
 load();
+// a link like ...tracker.html?k=<code> pairs on its own (and is remembered), so a
+// Home Screen bookmark or a shared link never needs the code typed in
+try{ const m=location.search.match(/[?&]k=([a-z0-9]{6,20})/i); if(m && m[1].toLowerCase()!==S.key){ S.key=m[1].toLowerCase(); S.alerts={}; S.state=null; S.local={}; S.last=""; save(); } }catch(e){}
 S.scroll = {};
 document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{ S.scroll[S.tab]=window.scrollY; S.tab=b.dataset.tab; save(); render(); });
 render();
