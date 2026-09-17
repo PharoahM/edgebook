@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0f1216">
+<title>Edge Book</title>
+<style>
+:root{
+  --bg:#f4f3ef;--card:#ffffff;--ink:#17191c;--mute:#6b7280;--line:#e2e0d9;
+  --accent:#1f9d5a;--accent-ink:#ffffff;--warn:#c27a12;--bad:#c93f3f;--soft:#eceae3;
+  --arb:#a86a00;--tab:#ffffff;
+  color-scheme:light dark;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1216;--card:#171b21;--ink:#e8eaed;--mute:#8b94a1;--line:#262c35;
+    --accent:#2fbf71;--accent-ink:#06130b;--warn:#e8a93c;--bad:#e05555;--soft:#1f252d;
+    --arb:#f0b64a;--tab:#12161b;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1216;--card:#171b21;--ink:#e8eaed;--mute:#8b94a1;--line:#262c35;
+  --accent:#2fbf71;--accent-ink:#06130b;--warn:#e8a93c;--bad:#e05555;--soft:#1f252d;
+  --arb:#f0b64a;--tab:#12161b;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:15px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+  font-variant-numeric:tabular-nums;-webkit-text-size-adjust:100%}
+header{position:sticky;top:0;z-index:5;background:var(--bg);
+  padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 8px;
+  display:flex;align-items:baseline;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line)}
+header h1{font-size:19px;margin:0;letter-spacing:-.01em}
+header small{color:var(--mute);font-size:12px}
+#link{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--mute);margin-right:6px;vertical-align:middle}
+#link.on{background:var(--accent)}
+#link.old{background:var(--warn)}
+main{padding:12px 16px calc(env(safe-area-inset-bottom,0px) + 76px);max-width:640px;margin:0 auto}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--tab);border-top:1px solid var(--line);
+  display:flex;padding:6px 8px calc(env(safe-area-inset-bottom,0px) + 6px);z-index:5}
+nav button{flex:1;background:none;border:0;color:var(--mute);font:600 12px/1 inherit;padding:8px 0;border-radius:10px;letter-spacing:.04em;text-transform:uppercase}
+nav button.on{color:var(--accent)}
+nav button b{display:block;font-size:17px;margin-bottom:4px;font-weight:600}
+nav button:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.row+.row{margin-top:4px}
+.sel{font-weight:650;font-size:16px}
+.px{font-weight:650;font-size:16px;white-space:nowrap}
+.mute{color:var(--mute);font-size:13px}
+.badge{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px;font-weight:700;background:var(--soft);color:var(--ink)}
+.badge.ev{background:var(--accent);color:var(--accent-ink)}
+.badge.arb{background:var(--arb);color:#111}
+.badge.warn{background:var(--warn);color:#111}
+.badge.won{background:var(--accent);color:var(--accent-ink)}
+.badge.lost{background:var(--bad);color:#fff}
+.note{color:var(--warn);font-size:13px;margin-top:6px}
+.acts{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+button.b{background:var(--soft);color:var(--ink);border:0;border-radius:10px;padding:10px 14px;font:600 14px inherit;flex:1;min-width:64px}
+button.b.go{background:var(--accent);color:var(--accent-ink)}
+button.b.no{background:transparent;border:1px solid var(--line)}
+button.b.bad{background:var(--bad);color:#fff}
+button.b.warn{background:var(--warn);color:#111}
+button.b:disabled{opacity:.5}
+form.inl{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+form.inl label{font-size:12px;color:var(--mute);display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:.04em}
+input{width:100%;font:600 17px inherit;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+form.inl .full{grid-column:1/-1;display:flex;gap:8px}
+h2{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--mute);margin:18px 0 8px;font-weight:700}
+h2:first-child{margin-top:4px}
+.empty{color:var(--mute);padding:28px 8px;text-align:center}
+.pair{border-left:3px solid var(--arb);padding-left:10px;margin-left:-14px;padding-left:11px}
+.k{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.k div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px}
+.k b{display:block;font-size:20px;font-weight:700}
+.k span{font-size:11px;color:var(--mute);text-transform:uppercase;letter-spacing:.05em}
+.pos{color:var(--accent)}.neg{color:var(--bad)}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+td,th{padding:9px 10px;text-align:right;border-top:1px solid var(--line);font-size:14px;white-space:nowrap}
+th{font-size:11px;color:var(--mute);text-transform:uppercase;letter-spacing:.05em;border-top:0}
+td:first-child,th:first-child{text-align:left}
+.sheet{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;z-index:9}
+.sheet>div{background:var(--card);width:100%;border-radius:18px 18px 0 0;padding:20px 20px calc(env(safe-area-inset-bottom,0px) + 20px)}
+.sheet h3{margin:0 0 6px;font-size:18px}
+.sheet p{margin:0 0 14px;color:var(--mute);font-size:14px}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 84px);transform:translateX(-50%);
+  background:var(--ink);color:var(--bg);padding:8px 14px;border-radius:999px;font-size:13px;z-index:8;opacity:0;transition:opacity .2s}
+.toast.on{opacity:1}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+</head>
+<body>
+<header>
+  <h1><span id="link"></span>Edge Book</h1>
+  <small id="seen">not paired</small>
+</header>
+<main id="main"></main>
+<nav>
+  <button data-tab="live"><b>Live</b>Alerts</button>
+  <button data-tab="bets"><b>Bets</b>Open</button>
+  <button data-tab="books"><b>Books</b>Balances</button>
+  <button data-tab="stats"><b>Stats</b>Record</button>
+</nav>
+<div id="toast" class="toast"></div>
+<script>
+"use strict";
+// ---------- storage ----------
+const NTFY = "https://ntfy.sh";
+const BOOKS = {draftkings:"DraftKings", fanduel:"FanDuel", betrivers:"BetRivers", betmgm:"BetMGM", sportsinteraction:"Sports Interaction"};
+const S = {key:"", alerts:{}, state:null, local:{}, queue:[], last:"", tab:"live", open:{}};
+function load(){ try{ const j=JSON.parse(localStorage.getItem("edgebook")||"{}"); Object.assign(S, j); }catch(e){} }
+function save(){ try{ const {key,alerts,state,local,queue,last,tab}=S; localStorage.setItem("edgebook", JSON.stringify({key,alerts,state,local,queue,last,tab})); }catch(e){} }
+const $ = s=>document.querySelector(s);
+const esc = s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fmtET = (epoch, opts)=> new Date(epoch*1000).toLocaleString("en-CA", Object.assign({timeZone:"America/Toronto", weekday:"short", hour:"numeric", minute:"2-digit"}, opts||{}));
+const am = p=> (p>0?"+":"")+p;
+const money = v=> (v<0?"-":"")+"$"+Math.abs(v).toLocaleString("en-CA",{minimumFractionDigits:0,maximumFractionDigits:2});
+const ago = t=>{ const s=Math.max(0, Math.floor(Date.now()/1000-t)); return s<60?s+"s":s<3600?Math.floor(s/60)+"m":s<86400?Math.floor(s/3600)+"h":Math.floor(s/86400)+"d"; };
+const dec = p=> p>0 ? 1+p/100 : 1+100/(-p);
+let toastT; function toast(m){ const t=$("#toast"); t.textContent=m; t.classList.add("on"); clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove("on"),1800); }
+
+// ---------- network ----------
+async function poll(){
+  if(!S.key) return;
+  const url = `${NTFY}/mp-board-${S.key}/json?poll=1&since=${S.last||"all"}`;
+  let txt;
+  try{ const r = await fetch(url, {cache:"no-store"}); if(!r.ok) throw new Error(r.status); txt = await r.text(); }
+  catch(e){ $("#link").className=""; return; }
+  let n=0;
+  for(const line of txt.split("\n")){
+    if(!line.trim()) continue;
+    let ev; try{ ev=JSON.parse(line); }catch(e){ continue; }
+    if(ev.event!=="message") continue;
+    S.last = ev.id; n++;
+    let m; try{ m=JSON.parse(ev.message); }catch(e){ continue; }
+    if(m.t==="alert" && m.id){ S.alerts[m.id]=m; }
+    else if(m.t==="state" && (!S.state || m.ts>=S.state.ts)){ S.state=m; reconcile(); }
+  }
+  // keep the last 300 alerts
+  const ids = Object.keys(S.alerts).sort((a,b)=>S.alerts[b].ts-S.alerts[a].ts);
+  ids.slice(300).forEach(id=>delete S.alerts[id]);
+  await flush();
+  save(); render();
+}
+function reconcile(){
+  // drop local overlays the laptop has confirmed (or that are stale)
+  const seen = {}; (S.state.bets||[]).forEach(b=>seen[b.id]=b);
+  for(const id of Object.keys(S.local)){
+    const l=S.local[id], b=seen[id];
+    if((b && b.status===l.status) || (l.status==="new" && !b) || S.state.ts > l.t+120) delete S.local[id];
+  }
+}
+async function send(action){
+  action.at = Math.floor(Date.now()/1000);
+  S.queue.push(action); save();
+  await flush();
+}
+async function flush(){
+  while(S.queue.length){
+    const a=S.queue[0];
+    try{
+      const r = await fetch(`${NTFY}/mp-act-${S.key}`, {method:"POST", body:JSON.stringify(a), headers:{"Title":"action"}});
+      if(!r.ok) throw new Error(r.status);
+      S.queue.shift();
+    }catch(e){ toast("Offline, will retry"); break; }
+  }
+  save();
+}
+
+// ---------- derived ----------
+function betOf(id){
+  // laptop's view first, then the local overlay from a tap not yet confirmed
+  let b = null;
+  if(S.state) b = (S.state.bets||[]).find(x=>x.id===id) || null;
+  const l = S.local[id];
+  if(l){
+    if(l.status==="new") return null;
+    const stake=l.stake??b?.stake, price=l.price??b?.price;
+    const profit = l.status==="won" ? +(stake*(dec(price)-1)).toFixed(2) : l.status==="lost" ? -stake : (l.status==="open"||l.status==="skipped") ? null : 0;
+    b = Object.assign({}, b||{}, {id, status:l.status, stake, price, profit, settled: l.status==="open"?null:l.t});
+  }
+  return b;
+}
+function setLocal(id, patch){ S.local[id]=Object.assign({t:Math.floor(Date.now()/1000)}, patch); }
+
+// ---------- actions ----------
+window.act = {
+  bet(id){ S.open[id]=!S.open[id]; render(); },
+  async place(ev, id){
+    ev.preventDefault();
+    const f=ev.target, stake=+f.stake.value, price=parseInt(f.price.value,10), book=f.book.value;
+    if(!(stake>0)) return toast("Stake must be above 0");
+    if(!(price<=-100 || price>=100)) return toast("Price like -110 or +104");
+    setLocal(id,{status:"open", stake, price});
+    delete S.open[id]; render();
+    await send({t:"bet", id, stake, price, book});
+    toast("Logged: "+money(stake)+" at "+am(price));
+  },
+  async skip(id){ setLocal(id,{status:"skipped"}); render(); await send({t:"skip", id}); },
+  async unbet(id){ if(!confirm("Remove this bet and its money movements?")) return; setLocal(id,{status:"new"}); render(); await send({t:"unbet", id}); },
+  async result(id, outcome){
+    const b=betOf(id); if(!b) return;
+    const profit = outcome==="won" ? b.stake*(dec(b.price)-1) : outcome==="lost" ? -b.stake : 0;
+    setLocal(id,{status:outcome, stake:b.stake, price:b.price}); render();
+    await send({t:"result", id, outcome});
+    toast(outcome==="won"?"Won "+money(profit):outcome==="lost"?"Lost "+money(b.stake):"Stake returned");
+  },
+  async balance(ev, book){
+    ev.preventDefault();
+    const amount=+ev.target.amount.value;
+    if(!(amount>=0)) return toast("Enter the balance in dollars");
+    if(!S.state) S.state={ts:0,bets:[],balances:{},stats:{}};
+    S.state.balances = S.state.balances||{}; S.state.balances[book]={amount, set:Math.floor(Date.now()/1000), local:true};
+    delete S.open["bal:"+book]; render();
+    await send({t:"balance", book, amount});
+    toast((BOOKS[book]||book)+" set to "+money(amount));
+  },
+  editBal(book){ S.open["bal:"+book]=!S.open["bal:"+book]; render(); },
+  pair(){ openPair(); },
+};
+
+// ---------- views ----------
+function render(){
+  document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("on", b.dataset.tab===S.tab));
+  const st=S.state, ts=st?st.ts:0, age=ts?Date.now()/1000-ts:1e9;
+  $("#link").className = !S.key?"":age<720?"on":"old";
+  $("#seen").textContent = !S.key?"not paired":ts?("laptop "+ago(ts)+" ago"):"waiting for the laptop";
+  const m=$("#main");
+  m.innerHTML = ({live, bets, books, stats})[S.tab]();
+  window.scrollTo(0, S.scroll?.[S.tab]||0);
+}
+function alertCard(a, b, opts){
+  const stale = a.ts < Date.now()/1000 - 900 && !b;
+  const started = a.start < Date.now()/1000;
+  const kind = a.kind==="arb";
+  const v = kind ? "ARB "+(a.value*100).toFixed(2)+"%" : (a.value*100).toFixed(1)+"% EV";
+  const status = b ? `<span class="badge ${b.status==="won"?"won":b.status==="lost"?"lost":""}">${esc(b.status==="open"?"bet "+money(b.stake)+" at "+am(b.price):b.status)}</span>` : "";
+  let acts = "";
+  if(!b && !opts.readonly){
+    acts = S.open[a.id] ? `
+      <form class="inl" onsubmit="act.place(event,'${a.id}')">
+        <div><label>Stake $</label><input name="stake" type="number" inputmode="decimal" step="any" min="1" value="${a.stake}" id="st-${a.id}"></div>
+        <div><label>Price</label><input name="price" type="text" inputmode="numeric" value="${am(a.price)}" id="px-${a.id}"></div>
+        <input type="hidden" name="book" value="${esc(a.book)}">
+        <div class="full"><button class="b go" type="submit">Log bet</button><button class="b no" type="button" onclick="act.bet('${a.id}')">Cancel</button></div>
+      </form>` :
+      `<div class="acts"><button class="b go" onclick="act.bet('${a.id}')">Bet it</button><button class="b no" onclick="act.skip('${a.id}')">Skip</button></div>`;
+  }
+  if(b && b.status==="open" && !opts.readonly){
+    acts = `<div class="acts">
+      <button class="b go" onclick="act.result('${a.id}','won')">Won</button>
+      <button class="b bad" onclick="act.result('${a.id}','lost')">Lost</button>
+      <button class="b" onclick="act.result('${a.id}','push')">Push</button>
+      <button class="b no" onclick="act.unbet('${a.id}')">Undo</button></div>`;
+  }
+  const profit = b && b.status!=="open" && b.status!=="skipped" && b.profit!=null ? `<span class="px ${b.profit>0?"pos":b.profit<0?"neg":""}">${money(b.profit)}</span>` : "";
+  const clv = b && b.clv!=null ? ` &middot; vs close ${(b.clv*100).toFixed(1)}%` : "";
+  return `<div class="card${a.pair?" pair":""}">
+    <div class="row"><span><span class="badge ${kind?"arb":"ev"}">${v}</span> ${status}</span><span class="mute">${ago(a.ts)} ago${stale?" &middot; likely gone":""}</span></div>
+    <div class="row"><span class="sel">${esc(a.sel)}</span><span class="px">${am(a.price)}</span></div>
+    <div class="row"><span>${esc(a.bookName||BOOKS[a.book]||a.book)} &middot; ${esc(a.game)}</span>${profit||`<span class="mute">stake ${money(a.stake)}</span>`}</div>
+    <div class="row mute"><span>${esc(a.league.toUpperCase())} ${started?"started ":""}${fmtET(a.start)} ET${a.fair?" &middot; fair "+(a.fair*100).toFixed(1)+"%":""}${clv}</span></div>
+    ${a.note?`<div class="note">${esc(a.note)}</div>`:""}
+    ${acts}</div>`;
+}
+function live(){
+  if(!S.key) return `<div class="empty">Pair with the laptop first.<div class="acts"><button class="b go" onclick="act.pair()">Enter pairing code</button></div></div>`;
+  const cutoff = Date.now()/1000 - 12*3600;
+  const list = Object.values(S.alerts).filter(a=>a.ts>=cutoff).sort((x,y)=>y.ts-x.ts);
+  if(!list.length) return `<div class="empty">No alerts in the last 12 hours.<br><span class="mute">They appear here within about 30 seconds of the push.</span></div>`;
+  return list.map(a=>alertCard(a, betOf(a.id), {})).join("");
+}
+function bets(){
+  if(!S.state && !Object.keys(S.local).length) return `<div class="empty">Nothing logged yet.</div>`;
+  const all = {};
+  (S.state?.bets||[]).forEach(b=>all[b.id]=b);
+  Object.keys(S.local).forEach(id=>{ const b=betOf(id); if(b) all[id]=b; else delete all[id]; });
+  const rows = Object.values(all).filter(b=>b.status!=="skipped");
+  const open = rows.filter(b=>b.status==="open").sort((x,y)=>(x.start||0)-(y.start||0));
+  const done = rows.filter(b=>b.status!=="open").sort((x,y)=>(y.settled||y.placed||0)-(x.settled||x.placed||0));
+  const card = b=>{ const a = S.alerts[b.id] || Object.assign({ts:b.placed, note:""}, b); return alertCard(Object.assign({}, a, {stake:b.stake, price:b.price}), b, {}); };
+  let h = `<h2>Open (${open.length})</h2>` + (open.length? open.map(card).join("") : `<div class="empty">No open bets.</div>`);
+  h += `<h2>Settled</h2>` + (done.length? done.map(card).join("") : `<div class="empty">Nothing settled yet.</div>`);
+  return h;
+}
+function books(){
+  const bal = S.state?.balances||{};
+  const names = Object.assign({}, BOOKS); Object.keys(bal).forEach(k=>{ if(!names[k]) names[k]=k; });
+  const total = Object.values(bal).reduce((s,b)=>s+b.amount,0);
+  let h = `<div class="k"><div><b>${money(total)}</b><span>across books</span></div>
+    <div><b>${Object.keys(bal).length}</b><span>books set</span></div>
+    <div><b>${money(S.state?.stats?.open?.staked||0)}</b><span>in play</span></div></div>`;
+  h += `<h2>Balances</h2>`;
+  for(const [book,name] of Object.entries(names)){
+    const b = bal[book];
+    const editing = S.open["bal:"+book];
+    h += `<div class="card"><div class="row"><span class="sel">${esc(name)}</span><span class="px">${b?money(b.amount):"<span class=mute>not set</span>"}</span></div>
+      ${b?`<div class="row mute"><span>set ${ago(b.set)} ago, bets since then applied</span></div>`:""}
+      ${editing?`<form class="inl" onsubmit="act.balance(event,'${book}')"><div class="full"><input name="amount" id="bal-${book}" type="number" inputmode="decimal" step="0.01" min="0" placeholder="Balance now" value="${b?b.amount:""}"><button class="b go" type="submit">Save</button><button class="b no" type="button" onclick="act.editBal('${book}')">Cancel</button></div></form>`
+        :`<div class="acts"><button class="b" onclick="act.editBal('${book}')">${b?"Correct balance":"Set balance"}</button></div>`}
+    </div>`;
+  }
+  h += `<h2>Pairing</h2><div class="card"><div class="row"><span>Code</span><span class="px">${esc(S.key||"none")}</span></div><div class="acts"><button class="b" onclick="act.pair()">Change</button></div></div>`;
+  return h;
+}
+function stats(){
+  const st = S.state?.stats;
+  if(!st || !st.all) return `<div class="empty">Stats arrive from the laptop once a bet is settled.</div>`;
+  const a = st.all;
+  const pct = v=> v==null?"n/a":(v*100).toFixed(1)+"%";
+  const cls = v=> v>0?"pos":v<0?"neg":"";
+  let h = `<div class="k">
+    <div><b class="${cls(a.profit)}">${money(a.profit)}</b><span>profit</span></div>
+    <div><b>${a.won}-${a.lost}${a.push?"-"+a.push:""}</b><span>record</span></div>
+    <div><b>${pct(a.win_pct)}</b><span>win rate</span></div>
+    <div><b class="${cls(a.roi)}">${pct(a.roi)}</b><span>roi</span></div>
+    <div><b>${money(a.staked)}</b><span>staked</span></div>
+    <div><b>${st.open?.bets||0}</b><span>open</span></div></div>`;
+  if(st.clv) h += `<h2>Closing line value</h2><div class="card"><div class="row"><span>Mean value vs Pinnacle close</span><span class="px ${cls(st.clv.mean)}">${pct(st.clv.mean)}</span></div>
+    <div class="row mute"><span>${st.clv.beat} of ${st.clv.n} bets beat the close. Positive over hundreds of bets is the proof the edges are real.</span></div></div>`;
+  const table = (title, obj, name)=>{
+    const keys = Object.keys(obj); if(!keys.length) return "";
+    return `<h2>${title}</h2><div style="overflow-x:auto"><table><tr><th>${name}</th><th>W-L-P</th><th>Win</th><th>Staked</th><th>Profit</th><th>ROI</th></tr>` +
+      keys.sort((x,y)=>obj[y].profit-obj[x].profit).map(k=>{ const b=obj[k]; return `<tr><td>${esc(BOOKS[k]||({edge:"+EV",arb:"Arb"})[k]||(k.length<=4?k.toUpperCase():k))}</td><td>${b.won}-${b.lost}-${b.push}</td><td>${pct(b.win_pct)}</td><td>${money(b.staked)}</td><td class="${cls(b.profit)}">${money(b.profit)}</td><td class="${cls(b.roi)}">${pct(b.roi)}</td></tr>`; }).join("") + "</table></div>";
+  };
+  h += table("By type", st.kind||{}, "Type");
+  h += table("By book", st.book||{}, "Book");
+  h += table("By league", st.league||{}, "League");
+  return h;
+}
+
+// ---------- pairing ----------
+function openPair(){
+  const d=document.createElement("div"); d.className="sheet";
+  d.innerHTML = `<div><h3>Pair with the laptop</h3><p>Type the APP_KEY from live_config.py. It links this phone to your scanner's topics. Nothing here logs in anywhere or places a bet.</p>
+    <form id="pairf"><input id="pairkey" type="text" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="pairing code" value="${esc(S.key)}">
+    <div class="acts"><button class="b go" type="submit">Pair</button><button class="b no" type="button" id="pairx">Close</button></div></form></div>`;
+  document.body.appendChild(d);
+  d.querySelector("#pairx").onclick=()=>d.remove();
+  d.querySelector("#pairf").onsubmit=ev=>{ ev.preventDefault(); const k=d.querySelector("#pairkey").value.trim().toLowerCase();
+    if(!/^[a-z0-9]{6,20}$/.test(k)) return toast("Code is letters and digits only");
+    if(k!==S.key){ S.key=k; S.alerts={}; S.state=null; S.local={}; S.last=""; }
+    save(); d.remove(); render(); poll(); toast("Paired"); };
+  setTimeout(()=>d.querySelector("#pairkey").focus(), 50);
+}
+
+// ---------- boot ----------
+load();
+S.scroll = {};
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{ S.scroll[S.tab]=window.scrollY; S.tab=b.dataset.tab; save(); render(); });
+render();
+if(!S.key) openPair(); else poll();
+setInterval(()=>{ if(document.visibilityState==="visible") poll(); }, 20000);
+document.addEventListener("visibilitychange", ()=>{ if(document.visibilityState==="visible") poll(); });
+setInterval(()=>{ if(document.visibilityState==="visible" && !document.querySelector(".sheet") && !Object.keys(S.open).length) render(); }, 60000);
+</script>
+</body>
+</html>
